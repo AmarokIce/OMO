@@ -7,7 +7,7 @@ license='AFL-3.0'
 
 [[mods]]
 modId="omo"
-version="${file.jarVersion}"
+version="1.0.1"
 displayName="OMO"
 credits="Someoneice"
 authors="Someoneice"

@@ -21,6 +21,7 @@ object CommandRegistry {
         cmd.TPACCEPT(event)
         cmd.TPDENY(event)
         cmd.TPAHERE(event)
+        cmd.BACK(event)
     }
 
     @SubscribeEvent

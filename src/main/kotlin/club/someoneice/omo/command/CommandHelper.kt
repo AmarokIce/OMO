@@ -34,11 +34,8 @@ class CommandHelper {
                         Player.playerTeleportList[playerAsk] = playerName
                         Player.playerGoToList[playerAsk] = false
 
-                        tpa.source.sendSuccess(StringTextComponent("已經向${playerName.scoreboardName}發送請求！") as ITextComponent , true)
-                        (playerName as PlayerEntity).sendMessage(StringTextComponent("${playerAsk.scoreboardName} 希望傳送到你這來！") as ITextComponent, Util.NIL_UUID)
-
-                        // playerAsk.sendMessage(CommandContext("已經向 ${playerName.displayName} 發送一個傳送請求！") as ITextComponent, playerAsk.uuid)
-                        // playerName.sendMessage(CommandContext(" ${playerName.displayName} 希望傳送到你這邊來！") as ITextComponent, playerName.uuid)
+                        tpa.source.sendSuccess(StringTextComponent("Now make a tp ask to ${playerName.scoreboardName}！") as ITextComponent , true)
+                        (playerName as PlayerEntity).sendMessage(StringTextComponent("${playerAsk.scoreboardName} wanna tp to your here！") as ITextComponent, Util.NIL_UUID)
 
                         1
                     }
@@ -61,8 +58,8 @@ class CommandHelper {
                         Player.playerTeleportList[playerAsk] = playerName
                         Player.playerGoToList[playerAsk] = true
 
-                        tpa.source.sendSuccess(StringTextComponent("已經向 ${playerName.scoreboardName} 發送一個傳送請求！") as ITextComponent, false)
-                        (playerName as PlayerEntity).sendMessage(StringTextComponent("${playerAsk.scoreboardName} 希望傳送你到他那去！") as ITextComponent, Util.NIL_UUID)
+                        tpa.source.sendSuccess(StringTextComponent("Now make a tp ask to ${playerName.scoreboardName} ！") as ITextComponent, false)
+                        (playerName as PlayerEntity).sendMessage(StringTextComponent("${playerAsk.scoreboardName} wanna tp you to his side！") as ITextComponent, Util.NIL_UUID)
 
                         1
                     }
@@ -77,7 +74,7 @@ class CommandHelper {
                     val playerAsk: ServerPlayerEntity = tpa.source.playerOrException
 
                     if (Player.getKey(Player.playerTeleportList, playerAsk) == null) {
-                        (playerAsk as PlayerEntity).sendMessage(StringTextComponent("你没有任何请求！") as ITextComponent, playerAsk.uuid)
+                        (playerAsk as PlayerEntity).sendMessage(StringTextComponent("you have no tp ask！") as ITextComponent, playerAsk.uuid)
                     } else {
                         val player: PlayerEntity = Player.getKey(Player.playerTeleportList, playerAsk) as PlayerEntity
 
@@ -86,7 +83,7 @@ class CommandHelper {
                                 playerAsk.teleportTo(player.level as ServerWorld, player.x, player.y, player.z, player.xRot, player.yRot)
                             false ->
                                 (player as ServerPlayerEntity).teleportTo((playerAsk as PlayerEntity).level as ServerWorld, playerAsk.x, playerAsk.y, playerAsk.z, playerAsk.xRot, playerAsk.yRot)
-                            else -> tpa.source.sendFailure(StringTextComponent("遇到問題。") as ITextComponent)
+                            else -> tpa.source.sendFailure(StringTextComponent("Something happen error.") as ITextComponent)
                         }
 
                         Player.playerTeleportList.remove(Player.getKey(Player.playerTeleportList, playerAsk))
@@ -104,12 +101,29 @@ class CommandHelper {
                     val playerAsk: ServerPlayerEntity = tpa.source.playerOrException
 
                     if (Player.getKey(Player.playerTeleportList, playerAsk) == null) {
-                        tpa.source.sendFailure(StringTextComponent("你没有任何请求！") as ITextComponent)
+                        tpa.source.sendFailure(StringTextComponent("You have no tp ask！") as ITextComponent)
                     } else {
                         Player.playerTeleportList.remove(Player.getKey(Player.playerTeleportList, playerAsk))
-                        tpa.source.sendSuccess(StringTextComponent("你拒絕了${Player.getKey(Player.playerTeleportList, playerAsk)?.scoreboardName} 的请求！") as ITextComponent, false)
-                        (Player.getKey(Player.playerTeleportList, playerAsk) as ServerPlayerEntity).sendMessage(StringTextComponent("${playerAsk.scoreboardName}拒絕了你的傳送請求！") as ITextComponent, Util.NIL_UUID)
+                        tpa.source.sendSuccess(StringTextComponent("You deny the tp ask from ${Player.getKey(Player.playerTeleportList, playerAsk)?.scoreboardName} ！") as ITextComponent, false)
+                        (Player.getKey(Player.playerTeleportList, playerAsk) as ServerPlayerEntity).sendMessage(StringTextComponent("${playerAsk.scoreboardName} deny your tp ask！") as ITextComponent, Util.NIL_UUID)
+                    }
 
+                    1
+                }
+        )
+    }
+
+    fun BACK(event: CommandDispatcher<CommandSource>) {
+        val tpa = event.register(
+            Commands.literal("back")
+                .executes { back ->
+                    val playerAsk: ServerPlayerEntity = back.source.playerOrException
+
+                    if (Player.playerDeath.containsKey(playerAsk)) {
+                        playerAsk.teleportTo(Player.playerDeath[playerAsk]?.level as ServerWorld, Player.playerDeath[playerAsk]?.x as Double, Player.playerDeath[playerAsk]?.y as Double, Player.playerDeath[playerAsk]?.z as Double, Player.playerDeath[playerAsk]?.RotX as Float, Player.playerDeath[playerAsk]?.RotY as Float)
+                        back.source.sendSuccess(StringTextComponent("Now back the last died！"), true)
+                    } else {
+                        back.source.sendFailure(StringTextComponent("Something happen error or you have never died."))
                     }
 
                     1
