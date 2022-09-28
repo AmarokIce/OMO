@@ -1,6 +1,6 @@
 package club.someoneice.omo.tool
 
-import kotlin.collections.HashMap
+import java.util.*
 
 
 object HashMapKeyHelper {

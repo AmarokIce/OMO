@@ -1,10 +1,7 @@
 package club.someoneice.omo
 
 import club.someoneice.omo.cofing.PineappleConfig
-import club.someoneice.omo.command.Back
-import club.someoneice.omo.command.Tpa
-import club.someoneice.omo.command.Tpaccept
-import club.someoneice.omo.command.Tpdeny
+import club.someoneice.omo.command.*
 import club.someoneice.omo.event.PlayerListener
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.Mod
@@ -48,6 +45,8 @@ class OAOMain {
         event.registerServerCommand(Tpaccept())
         event.registerServerCommand(Tpdeny())
         event.registerServerCommand(Back())
+        event.registerServerCommand(SetPort())
+        event.registerServerCommand(Backport())
 
     }
 }

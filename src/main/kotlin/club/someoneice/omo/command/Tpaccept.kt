@@ -2,11 +2,13 @@ package club.someoneice.omo.command
 
 import club.someoneice.omo.event.PlayerListener
 import club.someoneice.omo.tool.HashMapKeyHelper
+import club.someoneice.omo.tool.TeleportHelper
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.IChatComponent
+import net.minecraft.world.Teleporter
 
 class Tpaccept : CommandBase() {
     override fun getCommandName(): String {
@@ -24,17 +26,25 @@ class Tpaccept : CommandBase() {
             val player: EntityPlayerMP = sender as EntityPlayerMP
             val playerAsk: EntityPlayerMP = getPlayer(sender, playerName)
             if (player.worldObj == playerAsk.worldObj) {
-                if (!PlayerListener.PlayerGoing[playerName]!!) playerAsk.playerNetServerHandler.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch)
+                if (!PlayerListener.PlayerGoing[playerName]!!)
+                    playerAsk.playerNetServerHandler.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch)
                 else player.playerNetServerHandler.setPlayerLocation(playerAsk.posX, playerAsk.posY, playerAsk.posZ, playerAsk.rotationYaw, playerAsk.rotationPitch)
             } else {
-                player.addChatMessage(ChatComponentText("你们不在同一维度！") as IChatComponent)
-                playerAsk.addChatMessage(ChatComponentText("你们不在同一维度！") as IChatComponent)
+                if (!PlayerListener.PlayerGoing[playerName]!!) {
+                    playerAsk.mcServer.configurationManager.transferPlayerToDimension(playerAsk, player.worldObj?.provider?.dimensionId as Int, TeleportHelper(playerAsk.mcServer.worldServerForDimension(player.worldObj.provider?.dimensionId as Int)) as Teleporter)
+                    playerAsk.playerNetServerHandler.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch)
+                } else {
+                    player.mcServer.configurationManager.transferPlayerToDimension(player, playerAsk.worldObj?.provider?.dimensionId as Int, TeleportHelper(player.mcServer.worldServerForDimension(playerAsk.worldObj.provider?.dimensionId as Int)) as Teleporter)
+                    player.playerNetServerHandler.setPlayerLocation(playerAsk.posX, playerAsk.posY, playerAsk.posZ, playerAsk.rotationYaw, playerAsk.rotationPitch)
+                }
+                // player.addChatMessage(ChatComponentText("You are not in same world！") as IChatComponent)
+                // playerAsk.addChatMessage(ChatComponentText("You are not in same world！") as IChatComponent)
             }
 
 
 
             PlayerListener.PlayerTPList.remove(playerName.toString())
-        } else sender.addChatMessage(ChatComponentText("你沒有任何請求！") as IChatComponent)
+        } else sender.addChatMessage(ChatComponentText("你没有收到任何请求！") as IChatComponent)
     }
 
     override fun getRequiredPermissionLevel(): Int {

@@ -27,8 +27,8 @@ class Tpa: CommandBase() {
 
             PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
 
-            sender.addChatMessage(ChatComponentText("已經向 ${player.displayName} 發送一個傳送請求！") as IChatComponent)
-            player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望傳送到你這邊來！") as IChatComponent)
+            sender.addChatMessage(ChatComponentText("已经向 ${player.displayName} 发送传送请求！") as IChatComponent)
+            player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望传送到你这边！") as IChatComponent)
 
             PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
             PlayerListener.PlayerGoing.put(sender.commandSenderName, false)
@@ -46,8 +46,8 @@ class Tpa: CommandBase() {
                     PlayerListener.PlayerGoing.put(sender.commandSenderName, false)
 
 
-                    sender.addChatMessage(ChatComponentText("已經向 ${player.displayName} 發送一個傳送請求！") as IChatComponent)
-                    player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望傳送到你這邊來！") as IChatComponent)
+                    sender.addChatMessage(ChatComponentText("已经向 ${player.displayName} 发送传送请求！") as IChatComponent)
+                    player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望传送到你这边！") as IChatComponent)
                 }
 
                 msg[1] -> {
@@ -59,15 +59,15 @@ class Tpa: CommandBase() {
 
                     PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
 
-                    sender.addChatMessage(ChatComponentText("已經向 ${player.displayName} 發送一個傳送請求！") as IChatComponent)
-                    player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望你被傳送到他那邊去！") as IChatComponent)
+                    sender.addChatMessage(ChatComponentText("已经向 ${player.displayName} 发送传送请求！") as IChatComponent)
+                    player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望传送你到他那边！") as IChatComponent)
 
                 }
 
-                else -> sender.addChatMessage(ChatComponentText("未知的參數或錯誤。") as IChatComponent)
+                else -> sender.addChatMessage(ChatComponentText("参数错误。") as IChatComponent)
             }
 
-        } else sender.addChatMessage(ChatComponentText("未知的參數或錯誤。") as IChatComponent)
+        } else sender.addChatMessage(ChatComponentText("参数错误。") as IChatComponent)
     }
 
     override fun getRequiredPermissionLevel(): Int {

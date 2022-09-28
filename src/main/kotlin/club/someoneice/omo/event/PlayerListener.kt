@@ -10,8 +10,9 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.ChatComponentText
+import net.minecraft.world.WorldServer
 import net.minecraftforge.event.entity.player.PlayerDropsEvent
-import kotlin.collections.HashMap
+import java.util.*
 
 open class PlayerListener: Event() {
     companion object {
@@ -21,6 +22,7 @@ open class PlayerListener: Event() {
         // Why is String, String? Because it String, EntityPlayerMP before...
         val PlayerList: HashMap<String, String> = HashMap<String, String>()
         val PlayerDataList: HashMap<String, PlayerData> = HashMap<String, PlayerData>()
+        val PlayerPortList: HashMap<String, PlayerData> = HashMap<String, PlayerData>()
         var playerName:String = ""
     }
 
@@ -42,7 +44,7 @@ open class PlayerListener: Event() {
         event.entityPlayer.addChatMessage(ChatComponentText(event.entityPlayer.uniqueID.toString()))
         val player: String = event.entityPlayer.displayName
         if (PlayerList.containsKey(player)) {
-            val playerData = PlayerData(event.entityPlayer?.posX as Double, event.entityPlayer.posY, event.entityPlayer.posZ, event.entityPlayer.rotationYaw, event.entityPlayer.rotationPitch)
+            val playerData = PlayerData(event.entityPlayer.worldObj as WorldServer, event.entityPlayer?.posX as Double, event.entityPlayer.posY, event.entityPlayer.posZ, event.entityPlayer.rotationYaw, event.entityPlayer.rotationPitch)
             PlayerDataList.put(player , playerData)
         }
     }
