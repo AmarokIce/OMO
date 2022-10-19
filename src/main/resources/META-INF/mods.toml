@@ -1,0 +1,26 @@
+modLoader="kotlinforforge"
+loaderVersion="[3,)"
+license='AFL-3.0'
+
+[[mods]]
+modId="omo"
+version="${file.jarVersion}"
+displayName="omo"
+credits="Someoneice"
+authors="Someoneice"
+description='''
+OMO
+'''
+[[dependencies.omo]]
+    modId="forge"
+    mandatory=true
+    versionRange="[39,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.omo]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2]"
+    ordering="NONE"
+    side="BOTH"
