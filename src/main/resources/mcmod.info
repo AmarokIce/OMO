@@ -1,0 +1,16 @@
+[
+{
+  "modid": "omo",
+  "name": "omo",
+  "description": "omo.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Someoneice"],
+  "credits": "A TPA MOD.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["required-after:forgelin"]
+}
+]
