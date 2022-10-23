@@ -3,7 +3,7 @@ package club.someoneice.omo.tool
 import java.util.*
 
 
-object HashMapKeyHelper {
+object HashMapKeyUtil {
     fun getKey(map: HashMap<String, String>, value: String): String? {
         var key: String? = null
         for (getKey in map.keys) {
@@ -11,7 +11,6 @@ object HashMapKeyHelper {
                 key = getKey
             }
         }
-
         return key
     }
 }

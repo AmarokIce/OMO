@@ -1,7 +1,7 @@
 package club.someoneice.omo.command
 
 import club.someoneice.omo.event.PlayerListener
-import club.someoneice.omo.tool.HashMapKeyHelper
+import club.someoneice.omo.tool.HashMapKeyUtil
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
@@ -21,8 +21,8 @@ class Tpa: CommandBase() {
         if (msg.size == 1 && sender.commandSenderName != msg[0]) {
             val player: EntityPlayerMP = getPlayer(sender, msg[0])
 
-            if (HashMapKeyHelper.getKey(PlayerListener.PlayerTPList, player.displayName) != null) {
-                PlayerListener.PlayerTPList.remove(HashMapKeyHelper.getKey(PlayerListener.PlayerTPList, player.displayName).toString())
+            if (HashMapKeyUtil.getKey(PlayerListener.PlayerTPList, player.displayName) != null) {
+                PlayerListener.PlayerTPList.remove(HashMapKeyUtil.getKey(PlayerListener.PlayerTPList, player.displayName).toString())
             }
 
             PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
@@ -38,8 +38,8 @@ class Tpa: CommandBase() {
                 msg[0] -> {
                     val player: EntityPlayerMP = getPlayer(sender, msg[1])
 
-                    if (HashMapKeyHelper.getKey(PlayerListener.PlayerTPList, player.displayName) != null) {
-                        PlayerListener.PlayerTPList.remove(HashMapKeyHelper.getKey(PlayerListener.PlayerTPList, player.displayName).toString())
+                    if (HashMapKeyUtil.getKey(PlayerListener.PlayerTPList, player.displayName) != null) {
+                        PlayerListener.PlayerTPList.remove(HashMapKeyUtil.getKey(PlayerListener.PlayerTPList, player.displayName).toString())
                     }
 
                     PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
@@ -53,8 +53,8 @@ class Tpa: CommandBase() {
                 msg[1] -> {
                     val player: EntityPlayerMP = getPlayer(sender, msg[0])
 
-                    if (HashMapKeyHelper.getKey(PlayerListener.PlayerTPList, player.displayName) != null) {
-                        PlayerListener.PlayerTPList.remove(HashMapKeyHelper.getKey(PlayerListener.PlayerTPList, player.displayName).toString())
+                    if (HashMapKeyUtil.getKey(PlayerListener.PlayerTPList, player.displayName) != null) {
+                        PlayerListener.PlayerTPList.remove(HashMapKeyUtil.getKey(PlayerListener.PlayerTPList, player.displayName).toString())
                     }
 
                     PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
@@ -71,6 +71,10 @@ class Tpa: CommandBase() {
     }
 
     override fun getRequiredPermissionLevel(): Int {
-        return 1
+        return 0
+    }
+
+    override fun canCommandSenderUseCommand(sender: ICommandSender?): Boolean {
+        return true
     }
 }

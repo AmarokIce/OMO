@@ -32,8 +32,10 @@ class Backport : CommandBase() {
     }
 
     override fun getRequiredPermissionLevel(): Int {
-        return 1
+        return 0
     }
 
-
+    override fun canCommandSenderUseCommand(sender: ICommandSender?): Boolean {
+        return true
+    }
 }

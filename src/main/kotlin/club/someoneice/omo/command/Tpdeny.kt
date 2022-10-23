@@ -1,7 +1,7 @@
 package club.someoneice.omo.command
 
 import club.someoneice.omo.event.PlayerListener
-import club.someoneice.omo.tool.HashMapKeyHelper
+import club.someoneice.omo.tool.HashMapKeyUtil
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.ChatComponentText
@@ -18,7 +18,7 @@ class Tpdeny: CommandBase() {
     }
 
     override fun processCommand(sender: ICommandSender, msg: Array<String>) {
-        val playerName:String? = HashMapKeyHelper.getKey(PlayerListener.PlayerTPList, sender.commandSenderName)
+        val playerName:String? = HashMapKeyUtil.getKey(PlayerListener.PlayerTPList, sender.commandSenderName)
 
         if (playerName != null) {
             PlayerListener.PlayerTPList.remove(playerName.toString())
@@ -30,7 +30,10 @@ class Tpdeny: CommandBase() {
     }
 
     override fun getRequiredPermissionLevel(): Int {
-        return 1
+        return 0
     }
 
+    override fun canCommandSenderUseCommand(sender: ICommandSender?): Boolean {
+        return true
+    }
 }

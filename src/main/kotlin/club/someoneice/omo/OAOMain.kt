@@ -47,6 +47,6 @@ class OAOMain {
         event.registerServerCommand(Back())
         event.registerServerCommand(SetPort())
         event.registerServerCommand(Backport())
-
+        event.registerServerCommand(Rtp())
     }
 }

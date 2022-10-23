@@ -4,25 +4,28 @@ import club.someoneice.omo.OAOMain
 import club.someoneice.omo.event.PlayerListener
 
 class PineappleConfig {
-
-
     companion object {
-        private var player = PlayerListener.playerName
-        var LoginMsg = "歡迎${player}加入伺服器 !"
-        var OutMsg = "${player}離開了伺服器！"
+        var RTP = true
+        var PosX: Int = 5000
+        var PosZ: Int = 5000
     }
 
     init {
         val config = OAOMain.config
         config.load()
         config.addCustomCategoryComment("OMO", "歡迎！這裡是OMO的配置頁面")
-        val login = config["String", "加入世界時的提示", LoginMsg]
-        login.comment = "當玩家加入世界，會广播這個提示。"
-        LoginMsg = login.string
+        val login = config["Boolean", "是否允许玩家使用RTP", RTP]
+        login.comment = "如果为true，玩家将可以使用/rtp。"
+        RTP = login.boolean
 
-        val out = config["String", "断开链接時的提示", OutMsg]
-        out.comment = "當玩家断开链接，會广播這個提示。"
-        OutMsg = out.string
+        val getPosX = config["Int", "最大X距离.", PosX]
+        getPosX.comment = " "
+        PosX = getPosX.getInt(PosX)
+
+        val getPosZ = config["Int", "Enter PosZ.", PosZ]
+        getPosZ.comment = "If you wanna to changed random TP Y range, changed this.I don't recommend setting more than 20000, too much tp will also consume the server's network "
+        PosZ = getPosZ.getInt(PosZ)
+
         config.save()
     }
 }
