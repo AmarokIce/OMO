@@ -1,15 +1,20 @@
 package club.someoneice.omo.command
 
+import club.someoneice.omo.Config
 import club.someoneice.omo.common.Player
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.Commands.argument
 import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.TranslatableComponent
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
+import java.util.*
 
 @EventBusSubscriber
 class CommandHelper {
@@ -123,6 +128,32 @@ class CommandHelper {
 
                     0
                 }
+        )
+    }
+
+    fun RTP(event: CommandDispatcher<CommandSourceStack>) {
+        val rtp = event.register(
+            Commands.literal("rtp").executes { rtp ->
+                val player: ServerPlayer = rtp.source.playerOrException
+                val world: Level = player.level
+                if (Config.rtp!!.get()) {
+                    val random = Random()
+                    var x: Int = random.nextInt(Config.PosX!!.get())
+                    var z: Int = random.nextInt(Config.PosZ!!.get())
+                    if (!random.nextBoolean()) x = 0 - x
+                    if (!random.nextBoolean()) z = 0 - z
+
+                    var y: Int = random.nextInt(80) + 40
+                    while (world.getBlockState(BlockPos(x, y, z)) != Blocks.AIR.defaultBlockState()) y += 2
+                    while (world.getBlockState(BlockPos(x, y - 2, z)) == Blocks.AIR.defaultBlockState()) y -= 1
+
+                    player.connection.teleport(x.toDouble(), y.toDouble(), z.toDouble(), player.xRot, player.yRot)
+                } else {
+                    rtp.source.sendFailure(TranslatableComponent("Server Close RTP."))
+                }
+
+                0
+            }
         )
     }
 }
