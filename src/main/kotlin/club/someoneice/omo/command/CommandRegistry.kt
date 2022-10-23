@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.command.CommandSource
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent
-import club.someoneice.omo.command.CommandRegistry
 import net.minecraftforge.event.RegisterCommandsEvent
 import net.minecraftforge.fml.event.server.FMLServerStoppedEvent
 
@@ -22,6 +21,7 @@ object CommandRegistry {
         cmd.TPDENY(event)
         cmd.TPAHERE(event)
         cmd.BACK(event)
+        cmd.RTP(event)
     }
 
     @SubscribeEvent
