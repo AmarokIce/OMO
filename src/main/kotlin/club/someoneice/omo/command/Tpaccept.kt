@@ -37,14 +37,12 @@ class Tpaccept : CommandBase() {
                     player.mcServer.configurationManager.transferPlayerToDimension(player, playerAsk.worldObj?.provider?.dimensionId as Int, TeleportHelper(player.mcServer.worldServerForDimension(playerAsk.worldObj.provider?.dimensionId as Int)) as Teleporter)
                     player.playerNetServerHandler.setPlayerLocation(playerAsk.posX, playerAsk.posY, playerAsk.posZ, playerAsk.rotationYaw, playerAsk.rotationPitch)
                 }
-                // player.addChatMessage(ChatComponentText("You are not in same world！") as IChatComponent)
-                // playerAsk.addChatMessage(ChatComponentText("You are not in same world！") as IChatComponent)
             }
 
 
 
             PlayerListener.PlayerTPList.remove(playerName.toString())
-        } else sender.addChatMessage(ChatComponentText("你没有收到任何请求！") as IChatComponent)
+        } else sender.addChatMessage(ChatComponentText("You have no ask！") as IChatComponent)
     }
 
     override fun getRequiredPermissionLevel(): Int {

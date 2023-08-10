@@ -1,6 +1,6 @@
 package club.someoneice.omo.command
 
-import club.someoneice.omo.cofing.PineappleConfig
+import club.someoneice.omo.PineappleConfig
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP

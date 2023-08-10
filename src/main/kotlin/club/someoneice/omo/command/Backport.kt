@@ -27,8 +27,8 @@ class Backport : CommandBase() {
             player.mcServer.configurationManager.transferPlayerToDimension(player, world?.provider?.dimensionId as Int, TeleportHelper(player.mcServer.worldServerForDimension(world.provider?.dimensionId as Int)) as Teleporter)
 
             player.playerNetServerHandler.setPlayerLocation(PlayerListener.PlayerPortList[player.displayName]?.x as Double, PlayerListener.PlayerPortList[player.displayName]?.y as Double, PlayerListener.PlayerPortList[player.displayName]?.z as Double, PlayerListener.PlayerPortList[player.displayName]?.RotX as Float, PlayerListener.PlayerPortList[player.displayName]?.RotY as Float)
-            sender.addChatMessage(ChatComponentText("回到标记地点！") as IChatComponent)
-        } else sender.addChatMessage(ChatComponentText("你没有标记地点！") as IChatComponent)
+            sender.addChatMessage(ChatComponentText("Back the port！") as IChatComponent)
+        } else sender.addChatMessage(ChatComponentText("You have no port this time.(Please use home if you want to back anytime)") as IChatComponent)
     }
 
     override fun getRequiredPermissionLevel(): Int {

@@ -1,6 +1,6 @@
 package club.someoneice.omo
 
-import club.someoneice.omo.cofing.PineappleConfig
+import alexsocol.patcher.KotlinAdapter
 import club.someoneice.omo.command.*
 import club.someoneice.omo.event.PlayerListener
 import cpw.mods.fml.common.FMLCommonHandler
@@ -13,17 +13,13 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
 
 
-@Mod(modid = OAOMain.MODID, version = OAOMain.VERSION, dependencies = "required-after:legacymckotlin")
+@Mod(modid = OAOMain.MODID, version = OAOMain.VERSION, modLanguageAdapter = KotlinAdapter.className)
 class OAOMain {
     companion object {
         lateinit var config: Configuration
         const val MODID: String = "omo"
         const val VERSION: String = "1.0.1"
     }
-
-
-    @Mod.Instance
-    var instance: OAOMain? = null
 
     @EventHandler
     fun init(event: FMLInitializationEvent) {
@@ -48,5 +44,8 @@ class OAOMain {
         event.registerServerCommand(SetPort())
         event.registerServerCommand(Backport())
         event.registerServerCommand(Rtp())
+        event.registerServerCommand(SetHome())
+        event.registerServerCommand(Home())
+        if (PineappleConfig.OMOTP) event.registerServerCommand(OMOTp())
     }
 }

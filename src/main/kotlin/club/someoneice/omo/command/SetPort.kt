@@ -21,7 +21,7 @@ class SetPort: CommandBase() {
     override fun processCommand(sender: ICommandSender, msg: Array<String>) {
         val player: EntityPlayerMP = getPlayer(sender, sender.commandSenderName.toString()) as EntityPlayerMP
         PlayerListener.PlayerPortList.put(sender.commandSenderName, PlayerData(player.worldObj as WorldServer, player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch))
-        sender.addChatMessage(ChatComponentText("已经标记地点！") as IChatComponent)
+        sender.addChatMessage(ChatComponentText("Set port successful！") as IChatComponent)
 
     }
 

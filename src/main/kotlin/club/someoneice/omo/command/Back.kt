@@ -27,9 +27,9 @@ class Back: CommandBase() {
             if ((player.worldObj as WorldServer) != (PlayerListener.PlayerDataList[sender.commandSenderName]?.world as WorldServer))
                 player.mcServer.configurationManager.transferPlayerToDimension(player, world?.provider?.dimensionId as Int, TeleportHelper(player.mcServer.worldServerForDimension(world.provider?.dimensionId as Int)) as Teleporter)
             player.playerNetServerHandler.setPlayerLocation(PlayerListener.PlayerDataList[sender.commandSenderName]?.x as Double , PlayerListener.PlayerDataList[sender.commandSenderName]?.y as Double, PlayerListener.PlayerDataList[sender.commandSenderName]?.z as Double, PlayerListener.PlayerDataList[sender.commandSenderName]?.RotX as Float, PlayerListener.PlayerDataList[sender.commandSenderName]?.RotY as Float)
-            sender.addChatMessage(ChatComponentText("已经回到上一次死亡地点！") as IChatComponent)
+            sender.addChatMessage(ChatComponentText("Successful back the side of last dead！") as IChatComponent)
         } else {
-            sender.addChatMessage(ChatComponentText("你从未死亡！") as IChatComponent)
+            sender.addChatMessage(ChatComponentText("You have never dead！") as IChatComponent)
         }
 
     }

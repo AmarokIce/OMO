@@ -23,9 +23,9 @@ class Tpdeny: CommandBase() {
         if (playerName != null) {
             PlayerListener.PlayerTPList.remove(playerName.toString())
 
-            sender.addChatMessage(ChatComponentText("你拒绝了 ${playerName}！") as IChatComponent)
-            getPlayer(sender, playerName.toString()).addChatMessage(ChatComponentText("${sender.commandSenderName} 拒絕了你的傳送請求！") as IChatComponent)
-        } else sender.addChatMessage(ChatComponentText("你没有收到请求！") as IChatComponent)
+            sender.addChatMessage(ChatComponentText("You deny the ask from ${playerName}！") as IChatComponent)
+            getPlayer(sender, playerName.toString()).addChatMessage(ChatComponentText("${sender.commandSenderName} deny your ask！") as IChatComponent)
+        } else sender.addChatMessage(ChatComponentText("You have no ask！") as IChatComponent)
 
     }
 

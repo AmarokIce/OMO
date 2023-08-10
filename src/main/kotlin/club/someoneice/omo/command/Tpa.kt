@@ -27,8 +27,8 @@ class Tpa: CommandBase() {
 
             PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
 
-            sender.addChatMessage(ChatComponentText("已经向 ${player.displayName} 发送传送请求！") as IChatComponent)
-            player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望传送到你这边！") as IChatComponent)
+            sender.addChatMessage(ChatComponentText("Successful send an ask to ${player.displayName}！") as IChatComponent)
+            player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} wanna teleport to your side！") as IChatComponent)
 
             PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
             PlayerListener.PlayerGoing.put(sender.commandSenderName, false)
@@ -46,8 +46,8 @@ class Tpa: CommandBase() {
                     PlayerListener.PlayerGoing.put(sender.commandSenderName, false)
 
 
-                    sender.addChatMessage(ChatComponentText("已经向 ${player.displayName} 发送传送请求！") as IChatComponent)
-                    player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望传送到你这边！") as IChatComponent)
+                    sender.addChatMessage(ChatComponentText("Successful send an ask to ${player.displayName}！") as IChatComponent)
+                    player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} wanna teleport to your side！") as IChatComponent)
                 }
 
                 msg[1] -> {
@@ -59,15 +59,15 @@ class Tpa: CommandBase() {
 
                     PlayerListener.PlayerTPList.put(sender.commandSenderName, player.displayName)
 
-                    sender.addChatMessage(ChatComponentText("已经向 ${player.displayName} 发送传送请求！") as IChatComponent)
-                    player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} 希望传送你到他那边！") as IChatComponent)
+                    sender.addChatMessage(ChatComponentText("Successful send an ask to ${player.displayName}！") as IChatComponent)
+                    player.addChatMessage(ChatComponentText(" ${sender.commandSenderName} wanna teleport you to his side！") as IChatComponent)
 
                 }
 
-                else -> sender.addChatMessage(ChatComponentText("参数错误。") as IChatComponent)
+                else -> sender.addChatMessage(ChatComponentText("Error.") as IChatComponent)
             }
 
-        } else sender.addChatMessage(ChatComponentText("参数错误。") as IChatComponent)
+        } else sender.addChatMessage(ChatComponentText("Error.") as IChatComponent)
     }
 
     override fun getRequiredPermissionLevel(): Int {
