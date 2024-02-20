@@ -1,40 +1,43 @@
 package club.someoneice.omo.command
 
 import club.someoneice.omo.Config
-import club.someoneice.omo.common.Player
+import club.someoneice.omo.common.PlayerUtil
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.Commands.argument
 import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.commands.arguments.coordinates.Vec3Argument
 import net.minecraft.core.BlockPos
-import net.minecraft.network.chat.TranslatableComponent
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.phys.Vec3
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import java.util.*
 
 @EventBusSubscriber
 class CommandHelper {
     fun TPA(event: CommandDispatcher<CommandSourceStack>) {
-        val tpa = event.register(
-            Commands.literal("tpa")
+        event.register(
+            Commands.literal("tpa").requires {it.hasPermission(0)}
                 .then(argument("player", EntityArgument.players())
                     .executes { tpa ->
                         val playerName: ServerPlayer = EntityArgument.getPlayer(tpa, "player")
                         val playerAsk: ServerPlayer = tpa.source.playerOrException
 
-                        if (Player.getKey(Player.playerTeleportList, playerName) != null) {
-                            Player.playerTeleportList.remove(Player.getKey(Player.playerTeleportList, playerName))
+                        if (PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerName) != null) {
+                            PlayerUtil.playerTeleportList.remove(PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerName))
                         }
 
-                        Player.playerTeleportList[playerAsk] = playerName
-                        Player.playerGoToList[playerAsk] = false
+                        PlayerUtil.playerTeleportList[playerAsk] = playerName
+                        PlayerUtil.playerGoToList[playerAsk] = false
 
-                        tpa.source.sendSuccess(TranslatableComponent("已经向 ${playerName.scoreboardName}发送了传送请求！") , true)
-                        (playerName as net.minecraft.world.entity.player.Player).sendMessage(TranslatableComponent("${playerAsk.scoreboardName} 想要传送到你这里！"), (playerName as net.minecraft.world.entity.player.Player).uuid)
+                        tpa.source.sendSuccess({ Component.literal("Successful send an ask to ${playerName.scoreboardName}！") } , true)
+                        playerName.sendSystemMessage(Component.literal("${playerAsk.scoreboardName} wanna teleport to your side！"))
 
                         0
                     }
@@ -43,22 +46,22 @@ class CommandHelper {
     }
 
     fun TPAHERE(event: CommandDispatcher<CommandSourceStack>) {
-        val tpa = event.register(
-            Commands.literal("tpahere")
+        event.register(
+            Commands.literal("tpahere").requires {it.hasPermission(0)}
                 .then(argument("player", EntityArgument.players())
                     .executes { tpa ->
                         val playerName: ServerPlayer = EntityArgument.getPlayer(tpa, "player")
                         val playerAsk: ServerPlayer = tpa.source.playerOrException
 
-                        if (Player.getKey(Player.playerTeleportList, playerName) != null) {
-                            Player.playerTeleportList.remove(Player.getKey(Player.playerTeleportList, playerName))
+                        if (PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerName) != null) {
+                            PlayerUtil.playerTeleportList.remove(PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerName))
                         }
 
-                        Player.playerTeleportList[playerAsk] = playerName
-                        Player.playerGoToList[playerAsk] = true
+                        PlayerUtil.playerTeleportList[playerAsk] = playerName
+                        PlayerUtil.playerGoToList[playerAsk] = true
 
-                        tpa.source.sendSuccess(TranslatableComponent("已经向 ${playerName.scoreboardName} 发送了传送请求！"), false)
-                        (playerName as net.minecraft.world.entity.player.Player).sendMessage(TranslatableComponent("${playerAsk.scoreboardName} 希望传送你到他那边去！"), (playerName as net.minecraft.world.entity.player.Player).uuid)
+                        tpa.source.sendSuccess({ Component.literal("Successful send an ask to ${playerName.scoreboardName}！") }, false)
+                        playerName.sendSystemMessage(Component.literal("${playerAsk.scoreboardName} wanna teleport you to his side！"))
 
                         0
                     }
@@ -67,25 +70,25 @@ class CommandHelper {
     }
 
     fun TPACCEPT(event: CommandDispatcher<CommandSourceStack>) {
-        val tpa = event.register(
-            Commands.literal("tpaccept")
+        event.register(
+            Commands.literal("tpaccept").requires {it.hasPermission(0)}
                 .executes { tpa ->
                     val playerAsk: ServerPlayer = tpa.source.playerOrException
 
-                    if (Player.getKey(Player.playerTeleportList, playerAsk) == null) {
-                        (playerAsk as net.minecraft.world.entity.player.Player).sendMessage(TranslatableComponent("你没有收到任何请求！"), (playerAsk as net.minecraft.world.entity.player.Player).uuid)
+                    if (PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerAsk) == null) {
+                        playerAsk.sendSystemMessage(Component.literal("You have no ask！"))
                     } else {
-                        val player: net.minecraft.world.entity.player.Player = Player.getKey(Player.playerTeleportList, playerAsk) as net.minecraft.world.entity.player.Player
+                        val player: ServerPlayer = PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerAsk) ?: return@executes 0
 
-                        when(Player.playerGoToList[Player.getKey(Player.playerTeleportList, playerAsk)]) {
+                        when(PlayerUtil.playerGoToList[PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerAsk)]) {
                             true ->
-                                playerAsk.teleportTo(player.level as ServerLevel, player.x, player.y, player.z, player.xRot, player.yRot)
+                                playerAsk.teleportTo(player.level() as ServerLevel, player.x, player.y, player.z, player.xRot, player.yRot)
                             false ->
-                                (player as ServerPlayer).teleportTo((playerAsk as net.minecraft.world.entity.player.Player).level as ServerLevel, playerAsk.x, playerAsk.y, playerAsk.z, playerAsk.xRot, playerAsk.yRot)
-                            else -> tpa.source.sendFailure(TranslatableComponent("参数或未知问题。"))
+                                player.teleportTo((playerAsk as net.minecraft.world.entity.player.Player).level() as ServerLevel, playerAsk.x, playerAsk.y, playerAsk.z, playerAsk.xRot, playerAsk.yRot)
+                            else -> tpa.source.sendFailure(Component.literal("Soemthing error."))
                         }
 
-                        Player.playerTeleportList.remove(Player.getKey(Player.playerTeleportList, playerAsk))
+                        PlayerUtil.playerTeleportList.remove(PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerAsk))
                     }
 
                     0
@@ -94,18 +97,17 @@ class CommandHelper {
     }
 
     fun TPDENY(event: CommandDispatcher<CommandSourceStack>) {
-        val tpa = event.register(
-            Commands.literal("tpdeny")
+        event.register(
+            Commands.literal("tpdeny").requires {it.hasPermission(0)}
                 .executes { tpa ->
                     val playerAsk: ServerPlayer = tpa.source.playerOrException
 
-                    if (Player.getKey(Player.playerTeleportList, playerAsk) == null) {
-                        tpa.source.sendFailure(TranslatableComponent("你没有收到任何请求！"))
+                    if (PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerAsk) == null) {
+                        tpa.source.sendFailure(Component.literal("You have no ask！"))
                     } else {
-                        Player.playerTeleportList.remove(Player.getKey(Player.playerTeleportList, playerAsk))
-                        tpa.source.sendSuccess(TranslatableComponent("你拒绝了 ${Player.getKey(Player.playerTeleportList, playerAsk)?.scoreboardName} 的传送请求！"), false)
-                        (Player.getKey(Player.playerTeleportList, playerAsk) as ServerPlayer).sendMessage(TranslatableComponent("${playerAsk.scoreboardName} 拒绝了你的请求！"), (Player.getKey(Player.playerTeleportList, playerAsk) as ServerPlayer).uuid)
-
+                        PlayerUtil.playerTeleportList.remove(PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerAsk))
+                        tpa.source.sendSuccess({ Component.literal("You deny the ask from ${PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerAsk)?.scoreboardName}！") }, false)
+                        PlayerUtil.getKey(PlayerUtil.playerTeleportList, playerAsk)?.sendSystemMessage(Component.literal("${playerAsk.scoreboardName} deny your ask！"))
                     }
 
                     0
@@ -114,16 +116,16 @@ class CommandHelper {
     }
 
     fun BACK(event: CommandDispatcher<CommandSourceStack>) {
-        val back = event.register(
-            Commands.literal("back")
+        event.register(
+            Commands.literal("back").requires {it.hasPermission(0)}
                 .executes { back ->
                     val playerAsk: ServerPlayer = back.source.playerOrException
 
-                    if (Player.playerDeath.containsKey(playerAsk)) {
-                        playerAsk.teleportTo(Player.playerDeath[playerAsk]?.level as ServerLevel, Player.playerDeath[playerAsk]?.x as Double, Player.playerDeath[playerAsk]?.y as Double, Player.playerDeath[playerAsk]?.z as Double, Player.playerDeath[playerAsk]?.RotX as Float, Player.playerDeath[playerAsk]?.RotY as Float)
-                        back.source.sendSuccess(TranslatableComponent("已经回到上一次死亡地点！"), true)
+                    if (PlayerUtil.playerDeath.containsKey(playerAsk)) {
+                        playerAsk.teleportTo(PlayerUtil.playerDeath[playerAsk]?.level as ServerLevel, PlayerUtil.playerDeath[playerAsk]?.x as Double, PlayerUtil.playerDeath[playerAsk]?.y as Double, PlayerUtil.playerDeath[playerAsk]?.z as Double, PlayerUtil.playerDeath[playerAsk]?.rotX as Float, PlayerUtil.playerDeath[playerAsk]?.rotY as Float)
+                        back.source.sendSuccess({ Component.literal("Successful back to the side of last dead！") }, true)
                     } else {
-                        back.source.sendFailure(TranslatableComponent("你从未死亡."))
+                        back.source.sendFailure(Component.literal("You have never dead."))
                     }
 
                     0
@@ -132,10 +134,11 @@ class CommandHelper {
     }
 
     fun RTP(event: CommandDispatcher<CommandSourceStack>) {
-        val rtp = event.register(
-            Commands.literal("rtp").executes { rtp ->
+        event.register(
+            Commands.literal("rtp").requires {it.hasPermission(0)}
+				.executes { rtp ->
                 val player: ServerPlayer = rtp.source.playerOrException
-                val world: Level = player.level
+                val world: Level = player.level()
                 if (Config.rtp!!.get()) {
                     val random = Random()
                     var x: Int = random.nextInt(Config.PosX!!.get())
@@ -149,8 +152,84 @@ class CommandHelper {
 
                     player.connection.teleport(x.toDouble(), y.toDouble(), z.toDouble(), player.xRot, player.yRot)
                 } else {
-                    rtp.source.sendFailure(TranslatableComponent("Server Close RTP."))
+                    rtp.source.sendFailure(Component.literal("Server Close RTP."))
                 }
+
+                0
+            }
+        )
+    }
+
+    fun OMOTP(event: CommandDispatcher<CommandSourceStack>) {
+        event.register(
+            Commands.literal("omotp").requires {
+                it.hasPermission(0)
+            }.then(argument("player", EntityArgument.players()).executes {
+                val playerSource: ServerPlayer = it.source.playerOrException
+
+                val player: ServerPlayer = EntityArgument.getPlayer(it, "player")
+
+                val x: Double = player.x
+                val y: Double = player.y
+                val z: Double = player.z
+                val world: ServerLevel = player.level() as ServerLevel
+
+                playerSource.teleportTo(world, x, y, z, playerSource.xRot, playerSource.yRot)
+
+                0
+            }).then(argument("pos", Vec3Argument.vec3()).executes {
+                val player: ServerPlayer = it.source.playerOrException
+
+                val vec: Vec3 = Vec3Argument.getVec3(it, "pos")
+
+                val x: Double = vec.x
+                val y: Double = vec.y
+                val z: Double = vec.z
+
+                player.teleportTo(x, y, z)
+
+                0
+            })
+        )
+    }
+
+    fun HOME(event: CommandDispatcher<CommandSourceStack>) {
+        event.register(
+            Commands.literal("home").requires { it.hasPermission(0)}.executes {
+                val player: ServerPlayer = it.source.playerOrException
+                val playerNBT: CompoundTag = player.persistentData
+                player.level()
+                if (playerNBT.contains("home")) {
+                    val nbt : CompoundTag = playerNBT.getCompound("home")
+                    var world: ServerLevel? = null
+                    for (i in it.source.server.levelKeys()) {
+                        if (i.registry().namespace == nbt.getString("world")) {
+                            world = it.source.server.getLevel(i)
+                            break
+                        }
+                    }
+                    player.teleportTo(world as ServerLevel, nbt.getDouble("posX"), nbt.getDouble("posY"), nbt.getDouble("posZ"), player.yRot, player.xRot)
+                } else if (player.sleepingPos.orElse(null) != null) {
+                    player.teleportTo(it.source.server.overworld(), player.sleepingPos.get().x.toDouble(), player.sleepingPos.get().y.toDouble(), player.sleepingPos.get().z.toDouble(), player.yRot, player.xRot)
+                } else it.source.sendFailure(Component.literal("You have no home or bed!"))
+
+                0
+            }
+        )
+    }
+
+    fun SETHOME(event: CommandDispatcher<CommandSourceStack>) {
+        event.register(
+            Commands.literal("sethome").requires { it.hasPermission(0)}.executes {
+                val player: ServerPlayer = it.source.playerOrException
+                val playerNBT: CompoundTag = player.persistentData
+                val nbtPos = CompoundTag()
+                nbtPos.putDouble("posX", player.x)
+                nbtPos.putDouble("posY", player.y)
+                nbtPos.putDouble("posZ", player.z)
+                nbtPos.putString("world", player.level().dimension().registry().namespace)
+                playerNBT.put("home", nbtPos)
+                it.source.sendSuccess({ Component.literal("Successful to set home!") }, false)
 
                 0
             }

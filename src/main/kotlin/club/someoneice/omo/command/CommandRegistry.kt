@@ -1,5 +1,6 @@
 package club.someoneice.omo.command
 
+import club.someoneice.omo.Config
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.commands.CommandSourceStack
 import net.minecraftforge.event.RegisterCommandsEvent
@@ -21,6 +22,10 @@ object CommandRegistry {
         cmd.TPDENY(event)
         cmd.TPAHERE(event)
         cmd.BACK(event)
+        cmd.RTP(event)
+        cmd.HOME(event)
+        cmd.SETHOME(event)
+        if (Config.omotp!!.get()) cmd.OMOTP(event)
     }
 
     @SubscribeEvent

@@ -7,6 +7,6 @@ data class PlayerPath(
     val x: Double,
     val y: Double,
     val z: Double,
-    val RotX: Float,
-    val RotY: Float,
+    val rotX: Float,
+    val rotY: Float,
 )
